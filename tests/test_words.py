@@ -70,8 +70,8 @@ def test_ignore_too_short_words(text: str, min_length: int, expected: list[str])
 @pytest.mark.parametrize(
     ("text", "ignore_code", "expected"),
     [
-        ("Hello <code>world!<code>", True, ["hello"]),
-        ("Hello <code>world!<code>", False, ["hello", "world"]),
+        ("Hello <code>world!</code> Hi People", True, {"hello", "hi", "people"}),
+        ("Hello <code>world!</code> Hi People", False, {"hello", "world", "hi", "people"}),
     ],
 )
 def test_ignore_text_in_code_tags(text: str, ignore_code: bool, expected: list[str]) -> None:
@@ -82,7 +82,8 @@ def test_ignore_text_in_code_tags(text: str, ignore_code: bool, expected: list[s
         ignore_code: Whether to ignore words in code tags (parametrized).
         expected: Expected list result (parametrized).
     """
-    assert get_words(text, ignore_code=ignore_code) == expected
+    result = get_words(text, ignore_code=ignore_code)
+    assert set(result) == expected
 
 
 @pytest.mark.parametrize(
